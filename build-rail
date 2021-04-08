@@ -1,0 +1,15 @@
+#!/bin/env bash
+
+if [ "$#" -lt 2 ]; then
+    echo "Usage: run.sh <input regex> <output file>"
+    exit 1
+fi
+
+in="$1"
+out="$2"
+tmp=$(mktemp)
+cargo run --release "$in" > "$tmp"
+[ -d venv ] || virtualenv venv
+source venv/bin/activate
+pip install railroad-diagrams
+python "$tmp" > "$out"

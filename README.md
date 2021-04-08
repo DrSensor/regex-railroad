@@ -16,7 +16,7 @@ Simple regex:
 $ build-rail '[^ ](a+k*|[abc])' examples/simple.svg
 ```
 
-<img src="./examples/lisp_tokens.svg"/>
+<img src="./examples/simple.svg"/>
 
 Non-trivial regex (Lisp tokenization):
 
@@ -24,7 +24,7 @@ Non-trivial regex (Lisp tokenization):
 (?P<cmnt>;.*$)|(?P<str>r?"(\\"|[^"])*")|(?P<strerr>")|(?P<real>[+-]?\d+\.\d+(e\d+)?)|(?P<int>[+-]?\d+)|(?P<sym>[:_/?!&~\*+=%<>\d\w-]+)|(?P<delim>(\(|\)|\[|\]|\{|\}))|(?P<op>([\^]|'|`|\||\$|\#|,@|,|¬))|(?P<invalid>\S+)
 ```
 
-<img src="./examples/simple.svg"/>
+<img src="./examples/lisp_tokens.svg"/>
 
 ## How it works
 

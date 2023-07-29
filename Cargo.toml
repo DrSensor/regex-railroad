@@ -2,12 +2,12 @@
 name = "regex-railroad"
 version = "0.1.0"
 authors = ["Jonas Møller <jonas.moller@student.uib.no>"]
-edition = "2018"
+edition = "2021"
 
 [dependencies]
 lazy_static = "1.4.0"
 
 [dependencies.regex-syntax]
-version = "0.6.18"
+version = "0.7.4"
 default-features = false
 features = ["unicode-perl"]

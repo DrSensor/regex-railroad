@@ -192,11 +192,11 @@ fn descent(root: &Hir) {
                 print!(")");
             }
         }
-        HirKind::Anchor(Anchor::StartLine) => print!("{:?}", "^"),
-        HirKind::Anchor(Anchor::EndLine) => print!("{:?}", "$"),
-        HirKind::Anchor(Anchor::StartText) => print!("{:?}", "^"),
-        HirKind::Anchor(Anchor::EndText) => print!("{:?}", "$"),
-        HirKind::WordBoundary(_) => print!("{}", py_str(r"\b")),
+        HirKind::Anchor(Anchor::StartLine) => print!("Start()"),
+        HirKind::Anchor(Anchor::EndLine) => print!("End()"),
+        HirKind::Anchor(Anchor::StartText) => print!("Start()"),
+        HirKind::Anchor(Anchor::EndText) => print!("End()"),
+        HirKind::WordBoundary(_) => print!("{}", py_str(r"\\b")),
         HirKind::Empty => print!("{}", py_str("")),
     }
 }
@@ -210,7 +210,7 @@ fn main() {
     let hir = Parser::new().parse(rx).unwrap();
     println!("import sys");
     println!("from railroad import *");
-    print!("Diagram({:?}, ", "start");
+    print!("ComplexDiagram(");
     descent(&hir);
     println!(").writeSvg(sys.stdout.write)");
 }

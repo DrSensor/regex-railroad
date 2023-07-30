@@ -208,9 +208,7 @@ fn main() {
     }
     let rx = &args[0];
     let hir = Parser::new().parse(rx).unwrap();
-    println!("import sys");
-    println!("from railroad import *");
     print!("ComplexDiagram(");
     descent(&hir);
-    println!(").writeSvg(sys.stdout.write)");
+    println!(")");
 }

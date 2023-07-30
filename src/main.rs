@@ -1,7 +1,7 @@
-use regex_syntax::Parser;
 use regex_syntax::hir::*;
+use regex_syntax::Parser;
 use std::env;
-use std::mem;
+
 #[macro_use]
 extern crate lazy_static;
 
@@ -24,7 +24,7 @@ fn char_class(class: &ClassUnicode) -> Option<&'static str> {
             let mut hir_c = $hir.clone();
             hir_c.symmetric_difference(&CLASS);
             if hir_c.iter().collect::<Vec<_>>().len() == 0 {
-                return Some($class)
+                return Some($class);
             }
         }};
     }
@@ -113,12 +113,15 @@ fn descent(root: &Hir) {
         }
         HirKind::Literal(Literal::Unicode(lit)) => print!("{}", py_char_str(*lit)),
         HirKind::Repetition(rep) => {
-            print!("{}(", match &rep.kind {
-                RepetitionKind::OneOrMore => "OneOrMore",
-                RepetitionKind::ZeroOrMore => "ZeroOrMore",
-                RepetitionKind::ZeroOrOne => "Optional",
-                x => unimplemented!("{:?}", x),
-            });
+            print!(
+                "{}(",
+                match &rep.kind {
+                    RepetitionKind::OneOrMore => "OneOrMore",
+                    RepetitionKind::ZeroOrMore => "ZeroOrMore",
+                    RepetitionKind::ZeroOrOne => "Optional",
+                    x => unimplemented!("{:?}", x),
+                }
+            );
             descent(&rep.hir);
             print!(")");
         }
@@ -145,9 +148,10 @@ fn descent(root: &Hir) {
                     if range.start() == range.end() {
                         print!("{}, ", py_char_str(range.start()));
                     } else {
-                        print!("{}, ", py_str(&format!("{}-{}",
-                                                       range.start(),
-                                                       range.end())));
+                        print!(
+                            "{}, ",
+                            py_str(&format!("{}-{}", range.start(), range.end()))
+                        );
                     }
                 }
                 print!(")");
@@ -159,7 +163,7 @@ fn descent(root: &Hir) {
         HirKind::Anchor(Anchor::EndText) => print!("{:?}", "$"),
         HirKind::WordBoundary(_) => print!("{}", py_str(r"\b")),
         HirKind::Empty => print!("{}", py_str("")),
-        x => unimplemented!("{:?}", x)
+        x => unimplemented!("{:?}", x),
     }
 }
 

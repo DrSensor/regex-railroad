@@ -97,16 +97,16 @@ fn descent(root: &Hir) {
             }
             print!(")");
         }
+        HirKind::Group(Group {
+            kind: GroupKind::NonCapturing,
+            hir,
+        }) => descent(&hir),
         HirKind::Group(grp) => {
             print!("Group(");
             let name = match &grp.kind {
                 GroupKind::CaptureName { name, .. } => name.clone(),
                 GroupKind::CaptureIndex(idx) => idx.to_string(),
-                GroupKind::NonCapturing => {
-                    descent(&grp.hir);
-                    print!(")");
-                    return;
-                }
+                _ => unreachable!(),
             };
             descent(&grp.hir);
             print!(", {})", py_str(&name));

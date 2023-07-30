@@ -113,19 +113,55 @@ fn descent(root: &Hir) {
         }
         HirKind::Literal(Literal::Byte(_)) => todo!("draw as (4*[FF FF FF FF])[row]"),
         HirKind::Literal(Literal::Unicode(lit)) => print!("{}", py_char_str(*lit)),
-        HirKind::Repetition(rep) => {
-            print!(
-                "{}(",
-                match &rep.kind {
-                    RepetitionKind::OneOrMore => "OneOrMore",
-                    RepetitionKind::ZeroOrMore => "ZeroOrMore",
-                    RepetitionKind::ZeroOrOne => "Optional",
-                    x => unimplemented!("{:?}", x),
+        HirKind::Repetition(rep) => match &rep.kind {
+            RepetitionKind::Range(range) => match range {
+                RepetitionRange::Exactly(_count @ 0) => print!("Skip()"),
+                RepetitionRange::Exactly(_count @ 1) => descent(&rep.hir),
+                _ => {
+                    let msg = match range {
+                        RepetitionRange::Exactly(count @ 2..) => Some(format!("= {} times", count)),
+                        RepetitionRange::AtLeast(min @ 2..) => Some(format!("≥ {} times", min)),
+                        RepetitionRange::Bounded(min @ 1.., max @ 2..) => {
+                            Some(format!("{} ~ {} times", min, max))
+                        }
+                        _ => None,
+                    };
+                    match msg {
+                        Some(repeat) => {
+                            print!("OneOrMore(");
+                            descent(&rep.hir);
+                            print!(", {})", py_str(&repeat));
+                        }
+                        None => {
+                            print!(
+                                "{}(",
+                                match range {
+                                    RepetitionRange::AtLeast(_min @ 1) => "OneOrMore",
+                                    RepetitionRange::AtLeast(_min @ 0) => "ZeroOrMore",
+                                    RepetitionRange::Bounded(_min @ 0, _max @ 1) => "Optional",
+                                    _ => unreachable!(),
+                                }
+                            );
+                            descent(&rep.hir);
+                            print!(")");
+                        }
+                    }
                 }
-            );
-            descent(&rep.hir);
-            print!(")");
-        }
+            },
+            kind => {
+                print!(
+                    "{}(",
+                    match kind {
+                        RepetitionKind::OneOrMore => "OneOrMore",
+                        RepetitionKind::ZeroOrMore => "ZeroOrMore",
+                        RepetitionKind::ZeroOrOne => "Optional",
+                        _ => unreachable!(),
+                    }
+                );
+                descent(&rep.hir);
+                print!(")");
+            }
+        },
         HirKind::Concat(hirs) => {
             print!("Sequence(");
             for hir in hirs.iter() {

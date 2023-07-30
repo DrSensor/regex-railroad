@@ -111,6 +111,7 @@ fn descent(root: &Hir) {
             descent(&grp.hir);
             print!(", {})", py_str(&name));
         }
+        HirKind::Literal(Literal::Byte(_)) => todo!("draw as (4*[FF FF FF FF])[row]"),
         HirKind::Literal(Literal::Unicode(lit)) => print!("{}", py_char_str(*lit)),
         HirKind::Repetition(rep) => {
             print!(
@@ -132,6 +133,9 @@ fn descent(root: &Hir) {
                 print!(", ")
             }
             print!(")");
+        }
+        HirKind::Class(Class::Bytes(_class)) => {
+            todo!("draw as choice of (4*[FF FF FF FF])[row] or just that bytes")
         }
         HirKind::Class(Class::Unicode(class)) => {
             if let Some(c) = char_class(class) {
@@ -163,7 +167,6 @@ fn descent(root: &Hir) {
         HirKind::Anchor(Anchor::EndText) => print!("{:?}", "$"),
         HirKind::WordBoundary(_) => print!("{}", py_str(r"\b")),
         HirKind::Empty => print!("{}", py_str("")),
-        x => unimplemented!("{:?}", x),
     }
 }
 

@@ -90,7 +90,7 @@ fn py_str(s: &str) -> String {
 fn descent(root: &Hir) {
     match root.kind() {
         HirKind::Alternation(hirs) => {
-            print!("Choice(0, ");
+            print!("Choice(0,");
             for hir in hirs {
                 descent(hir);
                 print!(",")

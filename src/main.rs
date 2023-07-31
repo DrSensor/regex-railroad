@@ -93,7 +93,7 @@ fn descent(root: &Hir) {
             print!("Choice(0, ");
             for hir in hirs {
                 descent(hir);
-                print!(", ")
+                print!(",")
             }
             print!(")");
         }
@@ -109,7 +109,7 @@ fn descent(root: &Hir) {
                 _ => unreachable!(),
             };
             descent(&grp.hir);
-            print!(", {})", py_str(&name));
+            print!(",{})", py_str(&name));
         }
         HirKind::Literal(Literal::Byte(_)) => todo!("draw as (4*[FF FF FF FF])[row]"),
         HirKind::Literal(Literal::Unicode(lit)) => print!("{}", py_char_str(*lit)),
@@ -138,7 +138,7 @@ fn descent(root: &Hir) {
                             Some(repeat) => {
                                 print!("OneOrMore(");
                                 descent(&rep.hir);
-                                print!(", Comment({}))", py_str(&repeat));
+                                print!(",Comment({}))", py_str(&repeat));
                             }
                             None => std_repeat(match range {
                                 RepetitionRange::AtLeast(_min @ 1) => "OneOrMore",
@@ -161,7 +161,7 @@ fn descent(root: &Hir) {
             print!("Sequence(");
             for hir in hirs.iter() {
                 descent(hir);
-                print!(", ")
+                print!(",")
             }
             print!(")");
         }
@@ -174,17 +174,17 @@ fn descent(root: &Hir) {
             } else if let Some(c) = is_everything_except(class) {
                 print!("{}", py_str(&c));
             } else {
-                print!("Choice(0, ");
+                print!("Choice(0,");
                 for (i, range) in class.iter().enumerate() {
                     if i >= 20 {
                         print!("{:?}", "...");
                         break;
                     }
                     if range.start() == range.end() {
-                        print!("{}, ", py_char_str(range.start()));
+                        print!("{},", py_char_str(range.start()));
                     } else {
                         print!(
-                            "{}, ",
+                            "{},",
                             py_str(&format!("{}-{}", range.start(), range.end()))
                         );
                     }
